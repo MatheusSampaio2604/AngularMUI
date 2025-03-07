@@ -1,0 +1,44 @@
+<mat-card class="content">
+
+    <div class="left-side">
+        <mat-card class="pill-group">
+
+            <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+            <div class="header">
+                <img class="logoJanus" src="assets/janus-automation-logo.png" alt="Logo" />
+                <h2>Put your Username and Password!</h2>
+            </div>
+
+            <form [formGroup]="registerForm" (ngSubmit)="register()">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Username</mat-label>
+                    <input matInput type="text" formControlName="username" required />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" formControlName="password" required />
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" type="submit" class="full-width">Register now!</button>
+            </form>
+        </mat-card>
+    </div>
+
+    <mat-divider vertical></mat-divider>
+
+    <div class="right-side">
+        <div class="image">
+            <img class="logo" mat-card-image src="assets/janus-automation-psd.png" alt="Logo" />
+        </div>
+
+   <!--      <div class="image">
+            <img class="logo" mat-card-image src="assets/janus-automation-psd.png" alt="Logo" />
+        </div> -->
+
+    </div>
+
+</mat-card>
+
+

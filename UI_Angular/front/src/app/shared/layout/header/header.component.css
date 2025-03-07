@@ -1,0 +1,108 @@
+/* Container da barra de navegação */
+.header-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.nav-links {
+  display: flex;
+  gap: 10px;
+}
+
+.menu-button {
+  display: none; /* Esconde o botão em telas grandes */
+}
+
+.user-icon {
+  font-size: 24px;
+}
+
+
+/*.userName {
+  color: var(--mat-menu-item-label-text-color, var(--mat-sys-on-surface));
+  font-family: var(--mat-menu-item-label-text-font, var(--mat-sys-label-large-font));
+  font-size: 16px;
+}
+*/
+
+
+/* Container do sidenav */
+mat-sidenav-container {
+  display: flex;
+  height: 100%;
+}
+
+mat-sidenav {
+  width: 250px; /* Tamanho do sidenav */
+  transition: transform 0.3s ease; /* Transição suave */
+}
+
+mat-menu {
+  z-index: 10; /* Para garantir que o menu sobreponha outros elementos */
+}
+
+mat-menu-item {
+  font-size: 1rem;
+}
+
+
+/* Exibe o sidenav em telas grandes */
+@media (min-width: 768px) {
+  .sidenav-container {
+    display: block; /* Deixe visível em telas grandes */
+  }
+
+  .nav-links {
+    display: flex; /* Exibe o menu de navegação normal em telas grandes */
+  }
+
+  .menu-button {
+    display: none; /* Esconde o botão em telas grandes */
+  }
+
+  mat-sidenav {
+    transform: translateX(0); /* Deixe o sidenav visível */
+  }
+}
+
+/* Em telas pequenas */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none; /* Esconde o menu de navegação normal em telas pequenas */
+  }
+
+  .menu-button {
+    display: block; /* Exibe o botão de menu em telas pequenas */
+  }
+
+  mat-sidenav {
+    transform: translateX(-250px); /* Esconde o sidenav por padrão */
+  }
+
+  .sidenav-container {
+    display: contents; /* Exibe o sidenav em telas pequenas */
+  }
+
+  /* Quando o sidenav estiver aberto */
+  mat-sidenav.opened {
+    transform: translateX(0); /* Expande o sidenav */
+  }
+
+  /* Definir a direção dos botões no sidenav */
+  mat-sidenav button {
+    display: flex;
+    flex-direction: column; /* Alinha os botões verticalmente */
+    margin: 10px 0; /* Adiciona espaçamento entre os botões */
+  }
+}
