@@ -22,7 +22,7 @@
 
     <mat-menu #userMenu="matMenu">
         <span *ngIf="username" class="userName">Hi, {{ username }}!</span>
-        <button mat-menu-item routerLink="/profile">Perfil</button>
+        <button mat-menu-item routerLink="/account">Perfil</button>
         <button mat-menu-item routerLink="/settings">Configurações</button>
         <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
   standalone: false,
   styleUrl: './app.component.css'
 })
+
 export class AppComponent {
   exibirLayout = true;
 
