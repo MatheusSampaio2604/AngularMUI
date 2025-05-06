@@ -1,0 +1,14 @@
+[
+  {
+    "Name": "Administrators",
+    "Description": "Administrators",
+    "Enabled": true,
+    "UserPermissions": [ "ResetPass", "EditValue" ]
+  },
+  {
+    "Name": "Supervisors",
+    "Description": "user can make all changes on the system",
+    "Enabled": true,
+    "UserPermissions": [ "ResetPass", "EditValue" ]
+  }
+]

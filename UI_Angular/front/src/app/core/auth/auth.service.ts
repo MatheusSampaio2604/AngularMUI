@@ -2,10 +2,14 @@ import { Router } from "@angular/router";
 import { Roles } from "../enum/roles.enum";
 import { LoginUser } from "./login-user.model";
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment } from "../../../environments/environment.prod";
+import { firstValueFrom } from "rxjs";
+import { CookieService } from 'ngx-cookie-service';
+import { CleanJwtPayload, JwtPayload } from "./interfaces/IJwtPayload";
 
 @Injectable({
-  providedIn: 'root' // Garante que o serviço está disponível globalmente
+  providedIn: 'root'
 })
 
 export class AuthService {
@@ -14,9 +18,10 @@ export class AuthService {
   private tokenUserData: string = 'carboUserData';
 
 
+
   //public loginUser: LoginUser;
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private cookieService: CookieService) {
 
     //this.userManager = new UserManager({    //  authority: environment.IssuerUri,    //  client_id: 'CarboUi',    //  redirect_uri: environment.Uri + '/login-callback',
     //  response_type: 'code',    //  scope: 'openid profile email role carbo_api carbo_model',    //  post_logout_redirect_uri: environment.Uri    //});
@@ -32,62 +37,107 @@ export class AuthService {
 
   }
 
+  private async encryptPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    //console.warn(hashHex)
+    return hashHex;
+  }
+
+  private async decodeToken(token: string): Promise<JwtPayload | null> {
+    try {
+      const payload = token.split('.')[1];
+      const decoded: JwtPayload = JSON.parse(atob(payload));
+      decoded.name = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+      decoded.roles = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      decoded.token = token;
+
+      return decoded;
+    } catch (e) {
+      console.error('Erro ao decodificar o token:', e);
+      return null;
+    }
+  }
+
+  private async mapJwtPayload(decoded: JwtPayload): Promise<CleanJwtPayload> {
+    return {
+      username: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+      roles: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+      level: decoded.level,
+      expiration: decoded.exp
+    };
+  }
+
+
   public logout(): void {
-    localStorage.removeItem('user');
+    this.cookieService.delete('user');
     this.router.navigate(['/login']);
   }
 
   public async loginAsync(userLogin: LoginUser): Promise<boolean> {
-    //const data = await this.http.post<any>('', userLogin);
+    userLogin.password = await this.encryptPassword(userLogin.password!);
+    try {
 
-    if (userLogin.username === 'admin' && userLogin.password === 'admin') {
-      const user = {
-        username: userLogin.username,
-        token: 'abc123',
-        expiration: new Date().getTime() + 450000, // 7.5 min em milissegundos
-        role: Roles.Administrator
-      };
+      const data = await firstValueFrom(this.http.post<any>(`${environment.ApiUrl}/User/LoginRequest`, userLogin));
 
-      localStorage.setItem('user', JSON.stringify(user));
-      return true;
-    } else {
+      if (data.message === 'Success') {
+        const decrypt = await this.decodeToken(data.data);
+        //console.warn('decrypt', decrypt)
+        if (decrypt) {
+          this.cookieService.set('user', JSON.stringify(decrypt), new Date(decrypt.exp * 1000));
+          return true;
+        }
+
+        return false;
+      } else { return false; }
+    } catch (e) {
+      console.error(e);
       return false;
     }
-
-
   }
 
   public async registerAsync(userRegister: LoginUser): Promise<boolean> {
     //const data = await this.http.post<any>('', userLogin);
-
-    if (userRegister.username === 'admin' && userRegister.password === 'admin') {
-      const user = {
-        username: userRegister.username,
-        token: 'abc123',
-        expiration: new Date().getTime() + 450000,
-        role: Roles.Administrator
-        // 7.5 min em milissegundos
-      };
-
-      localStorage.setItem('user', JSON.stringify(user));
-      return true;
-    } else {
-      return false;
-    }
-
+    return false;
 
   }
 
   public userName(): string | null {
-    const userCookie = localStorage.getItem('user');
-
-    //console.warn(userCookie);
+    const userCookie = this.cookieService.get('user');
 
     if (userCookie) {
-      return JSON.parse(userCookie).username;
+      return JSON.parse(userCookie).sub;
     } else {
       return null;
     }
+  }
+
+  public roles(): string[] | null {
+    const userCookie = this.cookieService.get('user');
+
+    if (userCookie) {
+      return JSON.parse(userCookie)?.roles;
+    } else {
+      return null;
+    }
+  }
+
+  public token(): string | null {
+    const userCookie = this.cookieService.get('user');
+
+    if (userCookie) {
+      return JSON.parse(userCookie)?.token;
+    } else {
+      return null;
+    }
+  }
+
+  public getHeaders(): HttpHeaders {
+    const token = this.token();
+    return new HttpHeaders({ 'Authorization': `Bearer ${token}`, });
   }
 
   //public logout(): Promise<void> {

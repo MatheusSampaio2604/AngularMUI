@@ -1,44 +1,46 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { JwtPayload } from '../auth/interfaces/IJwtPayload';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router, private authService: AuthService, private cookieService: CookieService) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    const dataCookie: string | null = localStorage.getItem('user');
-    const user: { username: string, token: string, expiration: number, role: string } = dataCookie ? JSON.parse(dataCookie) : null;
-    const requiredRole: string[] = route.data['role'] || [];
-
-    //console.warn(route.routeConfig?.path)
-    console.warn(requiredRole)
-    console.warn(user)
+    const dataCookie: string | null = this.cookieService.get('user');
+    const user: JwtPayload = dataCookie ? JSON.parse(dataCookie) : null;
+    const requiredRole: string[] = route.data['roles'] || [];
 
     if (user) {
-      // Verifica se o usuário existe e se a data de expiração já passou
-      const isExpired: Boolean = new Date().getTime() > user.expiration;
-
-      //console.warn(user, isExpired)
+      const isExpired: Boolean = new Date().getTime() > user.exp * 1000;
 
       if (isExpired) {
         this.authService.logout();
-        return false; // Bloqueia o acesso à rota
-      } else if (!requiredRole.includes(user.role)) {
-        return false; // Permite acessar a rota
-      } else {
-        return true;
+        return false;
       }
+
+      const hasRequiredRole = user.roles?.some((role: string) =>
+        requiredRole.includes(role)
+      );
+
+      if (!hasRequiredRole) {
+        this.router.navigate(['/unauthorized']);
+        return false;
+      }
+
+      return true;
+
     } else {
       this.router.navigate(['/login']);
       return false;
     }
-
   }
 }

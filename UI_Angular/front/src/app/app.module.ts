@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -15,11 +16,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatCard, MatCardTitle } from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { MatDivider } from '@angular/material/divider';
 import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavContainer, MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+
 import { HomeComponent } from './shared/components/home/home.component';
 import { LoginComponent } from './core/auth/login/login.component';
 import { RegisterComponent } from './core/auth/register/register.component';
@@ -28,7 +30,7 @@ import { HeaderComponent } from './shared/layout/header/header.component';
 import { FooterComponent } from './shared/layout/footer/footer.component';
 import { UserManagerComponent } from './shared/components/user-manager/user-manager.component';
 import { UserOptionsComponent } from './shared/components/user-options/user-options.component';
-
+import { UserModalComponent } from './shared/components/user-manager/modal/user-modal/user-modal.component';
 
 
 @NgModule({
@@ -40,12 +42,14 @@ import { UserOptionsComponent } from './shared/components/user-options/user-opti
     HeaderComponent,
     FooterComponent,
     UserManagerComponent,
-    UserOptionsComponent
+    UserOptionsComponent,
+    UserModalComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    MatDialogModule,
     MatTabsModule,
     MatPaginatorModule,
     MatTableModule,
@@ -56,7 +60,6 @@ import { UserOptionsComponent } from './shared/components/user-options/user-opti
     MatIconModule,
     MatSelectModule,
     MatExpansionModule,
-    MatCard,
     MatDivider,
     MatToolbar,
     MatToolbarModule,
@@ -64,7 +67,9 @@ import { UserOptionsComponent } from './shared/components/user-options/user-opti
     MatSidenavModule,
     MatSidenav,
     MatListModule,
-    MatCardTitle
+    MatCardModule,
+    //MatCard,
+    //MatCardTitle,
   ],
   providers: [AuthService, provideHttpClient()],
   bootstrap: [AppComponent]

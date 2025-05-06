@@ -15,9 +15,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
 
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard], data: { role: [Roles.Administrator, Roles.Operator] } },
-  { path: 'usermanage', component: UserManagerComponent, canActivate: [AuthGuard], data: { role: [Roles.Administrator] } },
-  { path: 'account', component: UserOptionsComponent, canActivate: [AuthGuard], data: { role: [Roles.Administrator, Roles.Operator] } },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard], data: { roles: [Roles.Supervisor, Roles.Administrator, Roles.Operator] } },
+  { path: 'usermanage', component: UserManagerComponent, canActivate: [AuthGuard], data: { roles: [Roles.Supervisor, Roles.Administrator] } },
+  { path: 'account', component: UserOptionsComponent, canActivate: [AuthGuard], data: { roles: [Roles.Supervisor, Roles.Administrator, Roles.Operator] } },
+
 
 ];
 

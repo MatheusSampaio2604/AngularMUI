@@ -3,7 +3,7 @@ export const environment = {
   hmr: false,
   tokenName: "userToken",
 
-  ApiUrl: 'https://localhost:5012',
+  ApiUrl: 'https://localhost:7283/api',
   Uri: "http://localhost:4700",
 
   version: "prod"

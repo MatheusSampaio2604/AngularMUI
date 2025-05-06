@@ -1,23 +1,26 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { JwtPayload } from '../auth/interfaces/IJwtPayload';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginGuard implements CanActivate {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private _cookieService: CookieService) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    const userString: { username: string, token: string, expiration: number } = JSON.parse(localStorage.getItem('user') || '{}');
+    const cookie = this._cookieService.get('user');
+    const userString: JwtPayload = cookie ? JSON.parse(cookie) : null;
 
     if (userString) {
       try {
         const user = userString;
-        const isExpired = !user.expiration || new Date().getTime() > user.expiration;
+        const isExpired = !user.exp || new Date().getTime() > user.exp * 1000;
 
         if (!isExpired) {
           this.router.navigate(['/home']);

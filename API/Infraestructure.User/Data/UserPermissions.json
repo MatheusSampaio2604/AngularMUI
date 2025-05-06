@@ -1,0 +1,12 @@
+[
+  {
+    "Name": "ResetPass",
+    "Description": "Reset password for same user",
+    "Enabled": true
+  },
+  {
+    "Name": "EditValue",
+    "Description": "Edit value for same input",
+    "Enabled": true
+  }
+]

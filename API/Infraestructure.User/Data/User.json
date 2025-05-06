@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "Administrator",
+    "Level": 0,
+    "Password": "e7d3e769f3f593dadcb8634cc5b09fc90dd3a61c4a06a79cb0923662fe6fae6b",
+    "FirstName": "",
+    "LastName": "",
+    "Enabled": true,
+    "UserGroups": [ "Administrator", "Operator" ]
+  },
+  {
+    "Name": "Supervisor",
+    "Level": 0,
+    "Password": "",
+    "FirstName": "",
+    "LastName": "",
+    "Enabled": true,
+    "UserGroups": [ "Supervisor", "Administrator", "Operator" ]
+  }
+]

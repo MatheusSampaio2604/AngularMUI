@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Editar Usuário' : 'Adicionar Usuário' }}</h2>
+
+<form [formGroup]="userForm" (ngSubmit)="save()" mat-dialog-content autocomplete="off">
+  <mat-form-field appearance="outline" class="full-width m-top">
+    <mat-label>Usuário</mat-label>
+    <input matInput formControlName="Name" required autocomplete="new-user"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Primeiro Nome</mat-label>
+    <input matInput formControlName="FirstName" autocomplete="new-first-name" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Segundo Nome</mat-label>
+    <input matInput formControlName="LastName" autocomplete="new-last-name" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Nível</mat-label>
+    <mat-select formControlName="Level">
+      <mat-option *ngFor="let level of levels" [value]="level">
+        {{ level }} 
+      </mat-option> 
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="!isEditMode" appearance="outline" class="full-width">
+    <mat-label>Senha Padrão</mat-label>
+
+    <input matInput [type]="hide() ? 'password' : 'text'" formControlName="Password" autocomplete="new-pass" />
+    <button mat-icon-button
+            matSuffix
+            (click)="clickEvent($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide()">
+      <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Grupos</mat-label>
+    <mat-select formControlName="UserGroups" multiple>
+      <mat-option *ngFor="let group of allGroups" [value]="group">
+        {{ group }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+      {{ isEditMode ? 'Atualizar' : 'Adicionar' }}
+    </button>
+  </div>
+</form>
