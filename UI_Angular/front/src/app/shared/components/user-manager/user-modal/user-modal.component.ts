@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UserService } from '../../../../../core/services/user.service';
+import { UserService } from '../../../../core/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from '../../../../../core/models/user.model';
-import { SnackBar } from '../../../../utils/snackBar'
+import { User } from '../../../../core/models/user.model';
+import { SnackBar } from '../../../utils/snackBar'
+import { Groups } from '../../../../core/models/groups';
+import { GroupsService } from '../../../../core/services/groups.service';
 
 @Component({
   selector: 'app-user-modal',
@@ -16,8 +18,8 @@ export class UserModalComponent implements OnInit {
   userForm: FormGroup;
   isEditMode: boolean;
 
-  levels = [0, 1, 2, 3, 4, 5];
-  allGroups = ['Administrator', 'Operator', 'Supervisor']; // substitua por dados reais se necessário
+  levels = [0, 1, 2, 3];
+  allGroups: Groups[] = [];
 
   hide = signal(true);
   clickEvent(event: MouseEvent) {
@@ -29,6 +31,7 @@ export class UserModalComponent implements OnInit {
     private _fb: FormBuilder,
     private _dialogRef: MatDialogRef<UserModalComponent>,
     private _userService: UserService,
+    private _groupService: GroupsService,
     private _snackBarUtils: SnackBar,
     @Inject(MAT_DIALOG_DATA) public data: User | null
   ) {
@@ -38,8 +41,8 @@ export class UserModalComponent implements OnInit {
       Name: [data?.name || '', Validators.required],
       FirstName: [data?.firstName || ''],
       LastName: [data?.lastName || ''],
-      Level: [data?.level ?? 0, Validators.required],
       Password: [data?.password || '', this.isEditMode ? [] : Validators.required],
+      Level: [data?.level ?? 0, Validators.required],
       UserGroups: [data?.userGroups || [], Validators.required],
       Enabled: [data?.enabled ?? true]
     });
@@ -49,7 +52,9 @@ export class UserModalComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void { }
+  async ngOnInit(): Promise<void> {
+    this.allGroups = await this._groupService.GetGroupsList();
+  }
 
   save(): void {
     if (this.userForm.invalid) return;

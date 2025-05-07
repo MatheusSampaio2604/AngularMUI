@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { User } from '../../../core/models/user.model';
 import { UserService } from '../../../core/services/user.service';
 import { MatDialog } from '@angular/material/dialog';
-import { UserModalComponent } from './modal/user-modal/user-modal.component';
+import { UserModalComponent } from './user-modal/user-modal.component';
 import { MessageConfirmModalComponent } from '../modal/message-confirm-modal/message-confirm-modal.component';
 import { SnackBar } from '../../utils/snackBar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-manager',
@@ -13,15 +16,40 @@ import { SnackBar } from '../../utils/snackBar';
   styleUrl: './user-manager.component.css'
 })
 export class UserManagerComponent {
-  displayedColumns: string[] = ['name', 'First Name', 'Last Name', 'level', 'roles', 'actions'];
-  users: User[] = new Array;
+  displayedColumns: string[] = ['name', 'lastName', 'firstName', 'level', 'roles', 'actions'];
+  users = new MatTableDataSource<User>();
 
-  constructor(private _userService: UserService, private _dialog: MatDialog, private _snackBarUtils: SnackBar) {
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  filterValue: string = '';
+
+  constructor(
+    private _userService: UserService,
+    private _dialog: MatDialog,
+    private _snackBarUtils: SnackBar
+  ) {
+    this.users.filterPredicate = (data: User, filter: string) => {
+      const nameMatch = data.name?.toLowerCase().includes(filter);
+      const firstNameMatch = data.firstName?.toLowerCase().includes(filter);
+      const lastNameMatch = data.lastName?.toLowerCase().includes(filter);
+      const levelMatch = data.level?.toString().toLowerCase().includes(filter);
+      const rolesMatch = data.userGroups?.join(', ').toLowerCase().includes(filter);
+      return nameMatch || firstNameMatch || lastNameMatch || levelMatch || rolesMatch;
+    };
+
     this.getUserList();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.users.filter = filterValue.trim().toLowerCase();
+  }
+
   private async getUserList(): Promise<void> {
-    this.users = await this._userService.GetUserList();
+    const result = await this._userService.GetUserList();
+    this.users.data = result;
+    this.users.sort = this.sort;
+    this.users.paginator = this.paginator;
   }
 
   editUser(user: User) {
@@ -51,7 +79,6 @@ export class UserManagerComponent {
     dialogRef.afterClosed().subscribe(async (result: User | null) => {
       if (result) {
         this._snackBarUtils.alertMessage('Sucesso.', ['success-snackbar']);
-
         this.getUserList();
       }
     });

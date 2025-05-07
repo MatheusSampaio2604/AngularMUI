@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Injectable({
-  providedIn: 'root'  // Isso faz com que o Angular saiba como injetar
+  providedIn: 'root'
 })
 
 export class SnackBar {

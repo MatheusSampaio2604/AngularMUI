@@ -73,7 +73,7 @@ namespace API.Controllers
         [Authorize(Roles = "Administrator,Supervisor")]
         [HttpGet, Route("users")]
         [SwaggerOperation(Summary = "List Users", Description = "List All Enabled Users.")]
-        public async Task<ActionResult> Users()
+        public async Task<IActionResult> Users()
         {
             try
             {
@@ -158,9 +158,9 @@ namespace API.Controllers
         #endregion
 
         #region Groups
-        [Authorize(Roles = "Supervisor")]
+        [Authorize(Roles = "Administrator,Supervisor")]
         [HttpGet, Route(nameof(Groups))]
-        public async Task<ActionResult> Groups()
+        public async Task<IActionResult> Groups()
         {
             try
             {
@@ -234,7 +234,7 @@ namespace API.Controllers
 
         [Authorize(Roles = "Supervisor")]
         [HttpGet, Route("permissions")]
-        public async Task<ActionResult> Permissions()
+        public async Task<IActionResult> Permissions()
         {
             try
             {

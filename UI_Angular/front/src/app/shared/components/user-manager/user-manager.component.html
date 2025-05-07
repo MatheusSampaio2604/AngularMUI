@@ -4,42 +4,41 @@
     <button mat-raised-button color="primary" (click)="addUser()">
       <mat-icon>person_add</mat-icon> Adicionar Usuário
     </button>
+
   </div>
 
-  <!--
-    Name
-    Level
-    Password
-    FirstName
-    LastName
-    Enabled
-    UserGroups
-    -->
-
-
+  <div style="align-self: end;">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Filtrar usuários</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Digite para buscar..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
 
   <div class="table-wrapper">
-    <table mat-table [dataSource]="users" class="mat-elevation-z8">
+    <table mat-table [dataSource]="users" matSort class="mat-elevation-z8">
       <!-- Nome -->
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
         <td mat-cell *matCellDef="let user"> {{ user.name }} </td>
       </ng-container>
 
-      <!-- Email -->
-      <ng-container matColumnDef="Last Name">
-        <th mat-header-cell *matHeaderCellDef> Last Name </th>
+      <!-- Last Name -->
+      <ng-container matColumnDef="lastName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
         <td mat-cell *matCellDef="let user"> {{ user.lastName }} </td>
       </ng-container>
 
-      <ng-container matColumnDef="First Name">
-        <th mat-header-cell *matHeaderCellDef> First Name </th>
+      <!-- First Name -->
+      <ng-container matColumnDef="firstName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
         <td mat-cell *matCellDef="let user"> {{ user.firstName }} </td>
       </ng-container>
 
+      <!-- Level -->
       <ng-container matColumnDef="level">
-        <th mat-header-cell *matHeaderCellDef> Level</th>
-        <td mat-cell *matCellDef="let user"> {{ user.level}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Level</th>
+        <td mat-cell *matCellDef="let user"> {{ user.level }} </td>
       </ng-container>
 
       <!-- Função -->
@@ -59,14 +58,17 @@
           <button mat-icon-button color="danger" (click)="removeUser(user)">
             <mat-icon>delete</mat-icon>
           </button>
-
         </td>
       </ng-container>
 
       <!-- Header & Rows -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
     </table>
+
+    <mat-paginator [pageSize]="10"
+                   [pageSizeOptions]="[5, 10, 25, 50]"
+                   showFirstLastButtons>
+    </mat-paginator>
   </div>
 </mat-card>

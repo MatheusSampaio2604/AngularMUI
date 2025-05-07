@@ -38,12 +38,8 @@ export class UserService {
       const data: any = await firstValueFrom(
         this._http.get<any>(`${environment.ApiUrl}/User/GetUserByName?name=${name}`, { headers: this._auth.getHeaders() })
       );
-      var user: User = new User;
-
       if (data && data.message === 'Success') {
-        user = data.data;
-
-        return user;
+        return data.data;
       }
 
       return null;
@@ -94,6 +90,5 @@ export class UserService {
       console.error(e);
       return false;
     }
-
   }
 }

@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+ 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -30,9 +30,12 @@ import { HeaderComponent } from './shared/layout/header/header.component';
 import { FooterComponent } from './shared/layout/footer/footer.component';
 import { UserManagerComponent } from './shared/components/user-manager/user-manager.component';
 import { UserOptionsComponent } from './shared/components/user-options/user-options.component';
-import { UserModalComponent } from './shared/components/user-manager/modal/user-modal/user-modal.component';
+import { UserModalComponent } from './shared/components/user-manager/user-modal/user-modal.component';
 import { MessageConfirmModalComponent } from './shared/components/modal/message-confirm-modal/message-confirm-modal.component';
-
+import { MatSortModule } from '@angular/material/sort';
+import { GroupsManagerComponent } from './shared/components/groups-manager/groups-manager.component';
+import { PermissionsManagerComponent } from './shared/components/permissions-manager/permissions-manager.component';
+import { GenericFormModalComponent } from './shared/components/modal/generic-form-modal/generic-form-modal.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import { MessageConfirmModalComponent } from './shared/components/modal/message-
     UserOptionsComponent,
     UserModalComponent,
     MessageConfirmModalComponent,
+    GroupsManagerComponent,
+    PermissionsManagerComponent,
+    GenericFormModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,11 +68,12 @@ import { MessageConfirmModalComponent } from './shared/components/modal/message-
     MatIconModule,
     MatSelectModule,
     MatExpansionModule,
-    MatDividerModule,       // ← correto
-    MatToolbarModule,       // ← correto
-    MatSidenavModule,       // ← correto
+    MatDividerModule,
+    MatToolbarModule,
+    MatSidenavModule,
     MatListModule,
     MatCardModule,
+    MatSortModule,
   ],
   providers: [AuthService, provideHttpClient()],
   bootstrap: [AppComponent]
