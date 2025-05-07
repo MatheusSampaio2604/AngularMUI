@@ -17,9 +17,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
-import { MatDivider } from '@angular/material/divider';
-import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavContainer, MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 
 import { HomeComponent } from './shared/components/home/home.component';
@@ -31,6 +31,7 @@ import { FooterComponent } from './shared/layout/footer/footer.component';
 import { UserManagerComponent } from './shared/components/user-manager/user-manager.component';
 import { UserOptionsComponent } from './shared/components/user-options/user-options.component';
 import { UserModalComponent } from './shared/components/user-manager/modal/user-modal/user-modal.component';
+import { MessageConfirmModalComponent } from './shared/components/modal/message-confirm-modal/message-confirm-modal.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { UserModalComponent } from './shared/components/user-manager/modal/user-
     UserManagerComponent,
     UserOptionsComponent,
     UserModalComponent,
+    MessageConfirmModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,16 +62,11 @@ import { UserModalComponent } from './shared/components/user-manager/modal/user-
     MatIconModule,
     MatSelectModule,
     MatExpansionModule,
-    MatDivider,
-    MatToolbar,
-    MatToolbarModule,
-    MatSidenavContainer,
-    MatSidenavModule,
-    MatSidenav,
+    MatDividerModule,       // ← correto
+    MatToolbarModule,       // ← correto
+    MatSidenavModule,       // ← correto
     MatListModule,
     MatCardModule,
-    //MatCard,
-    //MatCardTitle,
   ],
   providers: [AuthService, provideHttpClient()],
   bootstrap: [AppComponent]

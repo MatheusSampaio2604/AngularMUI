@@ -21,9 +21,9 @@ namespace Infraestructure.User.Services
             WriteIndented = true
         };
 
-        private IEnumerable<Users> _users;
+        private static IEnumerable<Users>? _users;
 
-        public IEnumerable<Users> Users
+        public static IEnumerable<Users>? Users
         {
             get => _users;
             //set => _users = value;
@@ -47,19 +47,17 @@ namespace Infraestructure.User.Services
                 File.WriteAllText(_filePath, "[]");
             }
 
-            // Inicializa a lista de usuários
-            _users = [];
         }
 
         public async Task<IEnumerable<Users>> GetAllUsersAsync()
         {
             if (Users == null || !Users.Any())
             {
-                await GetAllAsync();
-                return Users!;
+                _ = await GetAllAsync();
+                return Users!.Where(x => x.Enabled);
             }
             else
-                return Users;
+                return Users.Where(x => x.Enabled);
         }
 
         private async Task<IEnumerable<Users>> GetAllAsync()
@@ -91,7 +89,7 @@ namespace Infraestructure.User.Services
             try
             {
                 _ = await GetAllUsersAsync();
-                return Users.FirstOrDefault(u => u.Name == name);
+                return Users?.FirstOrDefault(u => u.Name == name);
             }
             catch (Exception ex)
             {

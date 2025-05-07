@@ -17,7 +17,7 @@ namespace Domain.Model.Api
             Message = message;
         }
 
-        public static ApiResponse<T> Success(T data, string message = "Success")
+        public static ApiResponse<T> Success(T? data, string message = "Success")
         {
             return new ApiResponse<T>(data, message);
         }

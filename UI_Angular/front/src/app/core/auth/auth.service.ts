@@ -37,7 +37,7 @@ export class AuthService {
 
   }
 
-  private async encryptPassword(password: string): Promise<string> {
+  public async encryptPassword(password: string): Promise<string> {
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);

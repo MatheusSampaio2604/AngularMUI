@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginUser } from '../login-user.model';
 import { AuthService } from '../auth.service';
+import { SnackBar } from '../../../shared/utils/snackBar';
 
 @Component({
   selector: 'app-login',
@@ -18,10 +19,11 @@ export class LoginComponent {
 
   userLogin: LoginUser;
 
-  constructor(private fb: FormBuilder, private router: Router, private userService: AuthService) {
+  constructor(private _fb: FormBuilder, private _router: Router, private _userService: AuthService,
+              private _snackBarUtils: SnackBar) {
     this.userLogin = {};
 
-    this.loginForm = this.fb.group({
+    this.loginForm = this._fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
@@ -31,13 +33,13 @@ export class LoginComponent {
     const { username, password } = this.loginForm.value;
     this.userLogin = { username: username, password: password };
 
-    const response: boolean = await this.userService.loginAsync(this.userLogin);
+    const response: boolean = await this._userService.loginAsync(this.userLogin);
 
     if (response) {
-      this.router.navigate(['/home']);
+      this._router.navigate(['/home']);
     } else {
       this.errorMessage = 'Usuário ou senha inválidos';
+      this._snackBarUtils.alertMessage('Usuário ou senha inválidos', ['error-snackbar']);
     }
-
   }
 }

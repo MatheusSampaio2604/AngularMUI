@@ -13,7 +13,7 @@ namespace API.ApiActionResult
         {
             if (context.Result is ObjectResult objectResult)
             {
-                object result = objectResult.Value!;
+                object? result = objectResult.Value;
 
                 if (result is ApiResponse<object>)
                 {

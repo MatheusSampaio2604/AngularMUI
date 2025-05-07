@@ -32,4 +32,68 @@ export class UserService {
       return [];
     }
   }
+
+  public async GetUserByName(name: string): Promise<User | null> {
+    try {
+      const data: any = await firstValueFrom(
+        this._http.get<any>(`${environment.ApiUrl}/User/GetUserByName?name=${name}`, { headers: this._auth.getHeaders() })
+      );
+      var user: User = new User;
+
+      if (data && data.message === 'Success') {
+        user = data.data;
+
+        return user;
+      }
+
+      return null;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
+
+  public async createUser(data: User): Promise<boolean> {
+    try {
+      const headers = this._auth.getHeaders();
+      data.password = await this._auth.encryptPassword(data.password!);
+
+      const response = await firstValueFrom(this._http.post<any>(`${environment.ApiUrl}/User/CreateUserAsync`, data, { headers }));
+
+      return response.message === 'Success';
+
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+
+  }
+
+  public async updateUser(data: User): Promise<boolean> {
+    try {
+      const headers = this._auth.getHeaders();
+      const response = await firstValueFrom(this._http.put<any>(`${environment.ApiUrl}/User/UpdateUserAsync`, data, { headers }));
+
+      return response.message === 'Success';
+
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+
+  }
+
+  public async removeUser(data: User): Promise<boolean> {
+    try {
+      const headers = this._auth.getHeaders();
+      const response = await firstValueFrom(this._http.delete<any>(`${environment.ApiUrl}/User/DeleteUser?name=${data.name}`, { headers }));
+
+      return response.message === 'Success';
+
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+
+  }
 }

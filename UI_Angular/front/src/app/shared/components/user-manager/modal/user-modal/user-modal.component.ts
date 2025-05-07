@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit, signal } from '@angular/core';
-import { User } from '../../../../../core/models/user.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { UserService } from '../../../../../core/services/user.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { User } from '../../../../../core/models/user.model';
+import { SnackBar } from '../../../../utils/snackBar'
 
 @Component({
   selector: 'app-user-modal',
@@ -22,15 +24,17 @@ export class UserModalComponent implements OnInit {
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
-  constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<UserModalComponent>,
 
+  constructor(
+    private _fb: FormBuilder,
+    private _dialogRef: MatDialogRef<UserModalComponent>,
+    private _userService: UserService,
+    private _snackBarUtils: SnackBar,
     @Inject(MAT_DIALOG_DATA) public data: User | null
   ) {
     this.isEditMode = !!data;
 
-    this.userForm = this.fb.group({
+    this.userForm = this._fb.group({
       Name: [data?.name || '', Validators.required],
       FirstName: [data?.firstName || ''],
       LastName: [data?.lastName || ''],
@@ -50,14 +54,28 @@ export class UserModalComponent implements OnInit {
   save(): void {
     if (this.userForm.invalid) return;
 
-    const user: User = {
-      ...this.userForm.getRawValue()
-    };
+    const user: User = { ...this.userForm.getRawValue() };
 
-    this.dialogRef.close(user);
+    if (this.data) {
+      this._userService.updateUser(user).then(success => {
+        if (success) {
+          this._dialogRef.close(user);
+        } else {
+          this._snackBarUtils.alertMessage('Erro ao atualizar dados, tente novamente.', ['error-snackbar'])
+        }
+      });
+    } else {
+      this._userService.createUser(user).then(success => {
+        if (success) {
+          this._dialogRef.close(user);
+        } else {
+          this._snackBarUtils.alertMessage('Erro ao salvar usuário, tente novamente.', ['error-snackbar'])
+        }
+      });
+    }
   }
 
   cancel(): void {
-    this.dialogRef.close(null);
+    this._dialogRef.close(null);
   }
 }
