@@ -8,6 +8,7 @@ import { SnackBar } from '../../utils/snackBar';
 import { MessageConfirmModalComponent } from '../modal/message-confirm-modal/message-confirm-modal.component';
 import { Permissions } from '../../../core/models/permissions';
 import { GenericFormModalComponent } from '../modal/generic-form-modal/generic-form-modal.component';
+import { createFilterPredicate } from '../../utils/table-filter-utils';
 
 @Component({
   selector: 'app-permissions-manager',
@@ -28,19 +29,14 @@ export class PermissionsManagerComponent {
     private _dialog: MatDialog,
     private _snackBarUtils: SnackBar
   ) {
-    this.permissions.filterPredicate = (data: Permissions, filter: string) => {
-      const nameMatch = data.name?.toLowerCase().includes(filter);
-      const descriptionMatch = data.description?.toLowerCase().includes(filter);
-      const item = data.enabled;
-      return nameMatch || descriptionMatch || item;
-    };
+
+    this.permissions.filterPredicate = createFilterPredicate<Permissions>(['name', 'description']);
 
     this.getPermissionsList();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.permissions.filter = filterValue.trim().toLowerCase();
+  applyFilter(value: string) {
+    this.permissions.filter = value; // ou this.users.filter / this.permissions.filter
   }
 
   private async getPermissionsList(): Promise<void> {

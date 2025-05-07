@@ -8,6 +8,7 @@ import { Groups } from '../../../core/models/groups';
 import { MatTableDataSource } from '@angular/material/table';
 import { MessageConfirmModalComponent } from '../modal/message-confirm-modal/message-confirm-modal.component';
 import { GenericFormModalComponent } from '../modal/generic-form-modal/generic-form-modal.component';
+import { createFilterPredicate } from '../../utils/table-filter-utils';
 
 @Component({
   selector: 'app-groups-manager',
@@ -28,19 +29,14 @@ export class GroupsManagerComponent {
     private _dialog: MatDialog,
     private _snackBarUtils: SnackBar
   ) {
-    this.groups.filterPredicate = (data: Groups, filter: string) => {
-      const nameMatch = data.name?.toLowerCase().includes(filter);
-      const descriptionMatch = data.description?.toLowerCase().includes(filter);
-      const userPermissionsMatch = data.userPermissions?.join(', ').toLowerCase().includes(filter);
-      return nameMatch || descriptionMatch || userPermissionsMatch;
-    };
+
+    this.groups.filterPredicate = createFilterPredicate<Groups>(['name', 'description', 'userPermissions']);
 
     this.getGroupsList();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.groups.filter = filterValue.trim().toLowerCase();
+  applyFilter(value: string) {
+    this.groups.filter = value; // ou this.users.filter / this.permissions.filter
   }
 
   private async getGroupsList(): Promise<void> {

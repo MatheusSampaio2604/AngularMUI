@@ -36,6 +36,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { GroupsManagerComponent } from './shared/components/groups-manager/groups-manager.component';
 import { PermissionsManagerComponent } from './shared/components/permissions-manager/permissions-manager.component';
 import { GenericFormModalComponent } from './shared/components/modal/generic-form-modal/generic-form-modal.component';
+import { TableFilterComponent } from './shared/components/generics/table-filter/table-filter.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { GenericFormModalComponent } from './shared/components/modal/generic-for
     GroupsManagerComponent,
     PermissionsManagerComponent,
     GenericFormModalComponent,
+    TableFilterComponent,
   ],
   imports: [
     BrowserModule,

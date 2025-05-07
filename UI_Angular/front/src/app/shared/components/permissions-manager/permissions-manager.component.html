@@ -9,11 +9,7 @@
   </div>
 
   <div style="align-self: end;">
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-label>Filtrar</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Digite para buscar..." />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
+    <app-table-filter (filterChanged)="applyFilter($event)"></app-table-filter>
   </div>
 
   <div class="table-wrapper">

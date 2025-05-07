@@ -8,6 +8,7 @@ import { SnackBar } from '../../utils/snackBar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { createFilterPredicate } from '../../utils/table-filter-utils';
 
 @Component({
   selector: 'app-user-manager',
@@ -28,21 +29,13 @@ export class UserManagerComponent {
     private _dialog: MatDialog,
     private _snackBarUtils: SnackBar
   ) {
-    this.users.filterPredicate = (data: User, filter: string) => {
-      const nameMatch = data.name?.toLowerCase().includes(filter);
-      const firstNameMatch = data.firstName?.toLowerCase().includes(filter);
-      const lastNameMatch = data.lastName?.toLowerCase().includes(filter);
-      const levelMatch = data.level?.toString().toLowerCase().includes(filter);
-      const rolesMatch = data.userGroups?.join(', ').toLowerCase().includes(filter);
-      return nameMatch || firstNameMatch || lastNameMatch || levelMatch || rolesMatch;
-    };
+    this.users.filterPredicate = createFilterPredicate<User>(['name', 'firstName', 'lastName', 'level', 'userGroups']);
 
     this.getUserList();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.users.filter = filterValue.trim().toLowerCase();
+  applyFilter(value: string) {
+    this.users.filter = value; 
   }
 
   private async getUserList(): Promise<void> {
