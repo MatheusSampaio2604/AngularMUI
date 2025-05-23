@@ -1,32 +1,34 @@
-<!-- Barra de navegação (Navbar) -->
 <mat-toolbar color="primary" class="header-toolbar">
-  <!-- Botão para abrir o menu hambúrguer -->
   <button mat-icon-button (click)="toggleMenu()" class="menu-button">
     <mat-icon>menu</mat-icon>
   </button>
 
-  <span class="logo">Meu App</span>
+  <button mat-button routerLink="/home">
+    <span class="logo">Web Application</span>
+  </button>
 
   <span class="spacer"></span>
 
   <!-- Links do menu (para telas grandes) -->
   <div class="nav-links">
     <button mat-button routerLink="/home">Home</button>
+    <button mat-button routerLink="/home">Outra tela</button>
+    <button mat-button routerLink="/settings">Configurações</button>
   </div>
 
-  <!-- <mat-icon class="user-icon">account_circle</mat-icon> -->
+  <span class="spacer"></span>
 
   <button mat-icon-button [matMenuTriggerFor]="userMenu">
     <mat-icon class="user-icon">account_circle</mat-icon>
   </button>
 
   <mat-menu #userMenu="matMenu">
-    <span *ngIf="username" class="userName">Hi, {{ username }}!</span>
+    <span mat-item *ngIf="username" class="userName">Hi, {{ username }}!</span>
     <button mat-menu-item routerLink="/account">Perfil</button>
     <button *ngIf="userRoles?.includes(Roles.Administrator) || userRoles?.includes(Roles.Administrator)" mat-menu-item routerLink="/usermanage">Users</button>
     <button *ngIf="userRoles?.includes(Roles.Supervisor)" mat-menu-item routerLink="/groups">Groups</button>
     <button *ngIf="userRoles?.includes(Roles.Supervisor)" mat-menu-item routerLink="/permissions">Permissions</button>
-    <button mat-menu-item routerLink="/settings">Configurações</button>
+    <!--<button mat-menu-item routerLink="/settings">Configurações</button>-->
     <button mat-menu-item (click)="logout()">Logout</button>
   </mat-menu>
 </mat-toolbar>
@@ -34,8 +36,10 @@
 <!-- Menu lateral (só aparece em telas pequenas) -->
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav mode="over" class="sidenav">
+    <button mat-button *ngIf="username" class="userName">Hi, {{ username }}!</button>
     <button mat-button routerLink="/home" (click)="toggleMenu()">Home</button>
-    <button mat-button routerLink="/register" (click)="toggleMenu()">Registrar</button>
+    <button mat-button routerLink="/account">Perfil</button>
+    <button mat-button routerLink="/settings">Configurações</button>
     <button mat-button (click)="logout()">Logout</button>
   </mat-sidenav>
 </mat-sidenav-container>

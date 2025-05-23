@@ -104,5 +104,6 @@ mat-menu-item {
     display: flex;
     flex-direction: column; /* Alinha os botões verticalmente */
     margin: 10px 0; /* Adiciona espaçamento entre os botões */
+    width:100%;
   }
 }

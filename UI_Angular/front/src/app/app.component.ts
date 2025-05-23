@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,10 +8,12 @@ import { Router } from '@angular/router';
   styleUrl: './app.component.css'
 })
 
-export class AppComponent {
-  exibirLayout = true;
+export class AppComponent implements OnInit {
+  exibirLayout = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router) { }
+
+  ngOnInit() {
     this.router.events.subscribe(() => {
       this.exibirLayout = this.router.url !== '/login' && this.router.url !== '/register';
     });

@@ -23,7 +23,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 
 import { HomeComponent } from './shared/components/home/home.component';
-import { LoginComponent } from './core/auth/login/login.component';
+//import { LoginComponent } from './core/auth/login/login.component';
 import { RegisterComponent } from './core/auth/register/register.component';
 import { AuthService } from './core/auth/auth.service';
 import { HeaderComponent } from './shared/layout/header/header.component';
@@ -37,12 +37,13 @@ import { GroupsManagerComponent } from './shared/components/groups-manager/group
 import { PermissionsManagerComponent } from './shared/components/permissions-manager/permissions-manager.component';
 import { GenericFormModalComponent } from './shared/components/modal/generic-form-modal/generic-form-modal.component';
 import { TableFilterComponent } from './shared/components/generics/table-filter/table-filter.component';
+import { SettingsComponent } from './shared/components/settings/settings.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    LoginComponent,
+    //LoginComponent,
     RegisterComponent,
     HeaderComponent,
     FooterComponent,
@@ -54,6 +55,7 @@ import { TableFilterComponent } from './shared/components/generics/table-filter/
     PermissionsManagerComponent,
     GenericFormModalComponent,
     TableFilterComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,

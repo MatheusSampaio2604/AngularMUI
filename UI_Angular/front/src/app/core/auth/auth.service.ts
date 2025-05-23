@@ -13,33 +13,11 @@ import { CleanJwtPayload, JwtPayload } from "./interfaces/IJwtPayload";
 })
 
 export class AuthService {
-  /*  private userManager: UserManager;*/
-  private tokenLoggedData: string = 'carboLoggedUserData';
-  private tokenUserData: string = 'carboUserData';
 
-
-
-  //public loginUser: LoginUser;
-
-  constructor(private router: Router, private http: HttpClient, private cookieService: CookieService) {
-
-    //this.userManager = new UserManager({    //  authority: environment.IssuerUri,    //  client_id: 'CarboUi',    //  redirect_uri: environment.Uri + '/login-callback',
-    //  response_type: 'code',    //  scope: 'openid profile email role carbo_api carbo_model',    //  post_logout_redirect_uri: environment.Uri    //});
-    //this.loginUser = this.userLogged();
-    //if (!this.loginUser) {
-    //  this.loginUser = {
-    //    username: '',
-    //    email: '',
-    //    profiles: []
-    //  }
-
-    //}
-
-  }
+  constructor(private router: Router, private http: HttpClient, private cookieService: CookieService) { }
 
   public async encryptPassword(password: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
+    const data = new TextEncoder().encode(password);
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
@@ -70,7 +48,6 @@ export class AuthService {
       expiration: decoded.exp
     };
   }
-
 
   public logout(): void {
     this.cookieService.delete('user');

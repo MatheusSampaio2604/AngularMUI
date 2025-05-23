@@ -26,5 +26,10 @@ namespace Domain.Model.Api
         {
             return new ApiResponse<T>(default, message);
         }
+
+        public static ApiResponse<T> BadRequest(string message)
+        {
+            return new ApiResponse<T>(default, message);
+        }
     }
 }
