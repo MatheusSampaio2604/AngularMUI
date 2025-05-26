@@ -40,6 +40,22 @@ export class AuthService {
     }
   }
 
+    public userData() {
+    try
+    {
+      const userCookie = this.cookieService.get('user');
+      if (userCookie != undefined) {
+        const user = JSON.parse(userCookie);
+        console.log("USER DATA:", user)
+        return user;
+      }
+      return "";
+    }
+    catch (e) {
+      console.error(e);
+    }
+  }
+  
   private async mapJwtPayload(decoded: JwtPayload): Promise<CleanJwtPayload> {
     return {
       username: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
