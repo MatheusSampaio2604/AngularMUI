@@ -19,6 +19,7 @@ import { createFilterPredicate } from '../../utils/table-filter-utils';
 export class PermissionsManagerComponent {
   displayedColumns: string[] = ['name', 'description', 'actions'];
   permissions = new MatTableDataSource<Permissions>();
+  totalPermissions = 0;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -44,6 +45,7 @@ export class PermissionsManagerComponent {
     this.permissions.data = result;
     this.permissions.sort = this.sort;
     this.permissions.paginator = this.paginator;
+    this.totalPermissions = result.length;
   }
 
   add() {

@@ -35,7 +35,7 @@ export class LoginComponent {
   userLogin: LoginUser;
 
   constructor(private _fb: FormBuilder, private _router: Router, private _userService: AuthService,
-              private _snackBarUtils: SnackBar) {
+    private _snackBarUtils: SnackBar) {
     this.userLogin = {};
 
     this.loginForm = this._fb.group({
@@ -46,7 +46,7 @@ export class LoginComponent {
 
   async login(): Promise<void> {
     const { username, password } = this.loginForm.value;
-    this.userLogin = { username: username, password: password };
+    this.userLogin = { username, password };
 
     const response: boolean = await this._userService.loginAsync(this.userLogin);
 

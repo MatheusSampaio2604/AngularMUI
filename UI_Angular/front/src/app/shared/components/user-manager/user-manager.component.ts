@@ -9,6 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { createFilterPredicate } from '../../utils/table-filter-utils';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-user-manager',
@@ -19,6 +20,7 @@ import { createFilterPredicate } from '../../utils/table-filter-utils';
 export class UserManagerComponent {
   displayedColumns: string[] = ['name', 'lastName', 'firstName', 'level', 'roles', 'actions'];
   users = new MatTableDataSource<User>();
+  totalUsers = 0;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -27,7 +29,8 @@ export class UserManagerComponent {
   constructor(
     private _userService: UserService,
     private _dialog: MatDialog,
-    private _snackBarUtils: SnackBar
+    private _snackBarUtils: SnackBar,
+    private _authService: AuthService
   ) {
     this.users.filterPredicate = createFilterPredicate<User>(['name', 'firstName', 'lastName', 'level', 'userGroups']);
 
@@ -43,6 +46,7 @@ export class UserManagerComponent {
     this.users.data = result;
     this.users.sort = this.sort;
     this.users.paginator = this.paginator;
+    this.totalUsers = result.length;
   }
 
   editUser(user: User) {
@@ -57,6 +61,11 @@ export class UserManagerComponent {
         action: async () => await this.deleteUser(user)
       }
     });
+  }
+
+  hasAction(name: string): boolean {
+    const userName = this._authService.userName();
+    return userName === name;
   }
 
   addUser() {
@@ -78,6 +87,11 @@ export class UserManagerComponent {
   }
 
   private async deleteUser(user: User): Promise<void> {
+    if (!user) {
+      this._snackBarUtils.alertMessage('Usuário não encontrado.', ['error-snackbar']);
+      return;
+    }
+
     const success = await this._userService.removeUser(user);
     if (success) {
       this.getUserList();

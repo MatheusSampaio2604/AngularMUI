@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 
 export class AppComponent implements OnInit {
-  exibirLayout = false;
+  exibirLayout: Boolean = false;
 
   constructor(private router: Router) { }
 

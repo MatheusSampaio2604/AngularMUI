@@ -17,4 +17,3 @@ export interface CleanJwtPayload {
   level: string;
   expiration: number;
 }
-

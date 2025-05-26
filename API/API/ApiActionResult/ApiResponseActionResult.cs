@@ -26,10 +26,10 @@ namespace API.ApiActionResult
                     200 => ApiResponse<object>.Success(result),
                     // Bad Request
                     400 => ApiResponse<object>.Error(result?.ToString() ?? "Erro de requisição inválida"),
-                    // Not Found
-                    404 => ApiResponse<object>.Error("Recurso não encontrado"),
                     // Unauthorized
                     401 => ApiResponse<object>.Error("Não autorizado"),
+                    // Not Found
+                    404 => ApiResponse<object>.Error("Recurso não encontrado"),
                     // Internal Server Error
                     500 => ApiResponse<object>.Error("Erro interno do servidor"),
                     _ => ApiResponse<object>.Error("Erro desconhecido"),

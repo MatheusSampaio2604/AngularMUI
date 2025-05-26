@@ -15,17 +15,61 @@ import { SettingsComponent } from './shared/components/settings/settings.compone
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  //{ path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
-  { path: 'login', loadComponent: () => import('./core/auth/login/login.component').then(m => m.LoginComponent), canActivate: [LoginGuard] },
-  { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
+  {
+    path: 'login',
+    title: 'Login',
+    loadComponent: () => import('./core/auth/login/login.component').then(m => m.LoginComponent),
+    canActivate: [LoginGuard],
+  },
+  {
+    path: 'register',
+    title: 'Register',
+    component: RegisterComponent,
+    canActivate: [LoginGuard],
+  },
 
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard], data: { roles: [Roles.Supervisor, Roles.Administrator, Roles.Operator] } },
-  { path: 'account', component: UserOptionsComponent, canActivate: [AuthGuard], data: { roles: [Roles.Supervisor, Roles.Administrator, Roles.Operator] } },
-  { path: 'usermanage', component: UserManagerComponent, canActivate: [AuthGuard], data: { roles: [Roles.Supervisor, Roles.Administrator] } },
-
-  { path: 'groups', component: GroupsManagerComponent, canActivate: [AuthGuard], data: { roles: [Roles.Supervisor] } },
-  { path: 'permissions', component: PermissionsManagerComponent, canActivate: [AuthGuard], data: { roles: [Roles.Supervisor] } },
-  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], data: { roles: [Roles.Supervisor, Roles.Administrator, Roles.Operator] } },
+  {
+    path: 'home',
+    title: 'Pagina Inicial',
+    component: HomeComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Roles.Supervisor, Roles.Administrator, Roles.Operator] }
+  },
+  {
+    path: 'account',
+    title: 'Conta',
+    component: UserOptionsComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Roles.Supervisor, Roles.Administrator, Roles.Operator] }
+  },
+  {
+    path: 'usermanage',
+    title: 'Gerenciamento de Usuários',
+    component: UserManagerComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Roles.Supervisor, Roles.Administrator] }
+  },
+  {
+    path: 'groups',
+    title: 'Gerenciamento de Grupos',
+    component: GroupsManagerComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Roles.Supervisor] }
+  },
+  {
+    path: 'permissions',
+    title: 'Gerenciamento de Permissões',
+    component: PermissionsManagerComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Roles.Supervisor] }
+  },
+  {
+    path: 'settings',
+    title: 'Configurações',
+    component: SettingsComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Roles.Supervisor, Roles.Administrator, Roles.Operator] }
+  },
 
 ];
 
