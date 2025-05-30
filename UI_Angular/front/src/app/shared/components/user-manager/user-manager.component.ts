@@ -68,9 +68,7 @@ export class UserManagerComponent {
     return userName === name;
   }
 
-  addUser() {
-    this.openDialog();
-  }
+  addUser = () =>  this.openDialog();
 
   private openDialog(data?: User): void {
     const dialogRef = this._dialog.open(UserModalComponent, {

@@ -16,7 +16,7 @@ import { GroupsService } from '../../../../core/services/groups.service';
 })
 export class UserModalComponent implements OnInit {
   userForm: FormGroup;
-  isEditMode: boolean;
+  isEditMode: boolean = false;
 
   levels = [0, 1, 2, 3];
   allGroups: Groups[] = [];
@@ -35,7 +35,7 @@ export class UserModalComponent implements OnInit {
     private _snackBarUtils: SnackBar,
     @Inject(MAT_DIALOG_DATA) public data: User | null
   ) {
-    this.isEditMode = !!data;
+     this.isEditMode = !!this.data;
 
     this.userForm = this._fb.group({
       Name: [data?.name || '', Validators.required],
@@ -50,7 +50,7 @@ export class UserModalComponent implements OnInit {
     if (this.isEditMode) {
       this.userForm.get('Password')?.disable();
     }
-  }
+   }
 
   async ngOnInit(): Promise<void> {
     this.allGroups = await this._groupService.GetGroupsList();

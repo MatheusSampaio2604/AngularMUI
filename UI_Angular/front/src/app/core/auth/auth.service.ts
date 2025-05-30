@@ -1,7 +1,7 @@
 import { Router } from "@angular/router";
 import { Roles } from "../enum/roles.enum";
 import { LoginUser } from "./login-user.model";
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../../environments/environment.prod";
 import { firstValueFrom } from "rxjs";
@@ -12,9 +12,16 @@ import { CleanJwtPayload, JwtPayload } from "./interfaces/IJwtPayload";
   providedIn: 'root'
 })
 
-export class AuthService {
+export class AuthService implements OnDestroy{
+  private checkInterval: any;
 
   constructor(private router: Router, private http: HttpClient, private cookieService: CookieService) { }
+
+  ngOnDestroy(): void {
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval);
+    }
+  }
 
   public async encryptPassword(password: string): Promise<string> {
     const data = new TextEncoder().encode(password);
@@ -73,7 +80,6 @@ export class AuthService {
   public async loginAsync(userLogin: LoginUser): Promise<boolean> {
     userLogin.password = await this.encryptPassword(userLogin.password!);
     try {
-
       const data = await firstValueFrom(this.http.post<any>(`${environment.ApiUrl}/User/LoginRequest`, userLogin));
 
       if (data.message === 'Success') {
@@ -81,6 +87,7 @@ export class AuthService {
         //console.warn('decrypt', decrypt)
         if (decrypt) {
           this.cookieService.set('user', JSON.stringify(decrypt), new Date(decrypt.exp * 1000));
+          this.startAuthWatcher();
           return true;
         }
 
@@ -120,17 +127,36 @@ export class AuthService {
 
   public token(): string | null {
     const userCookie = this.cookieService.get('user');
-
-    if (userCookie) {
-      return JSON.parse(userCookie)?.token;
-    } else {
-      return null;
-    }
+    return userCookie ? JSON.parse(userCookie)?.token : null;
   }
 
   public getHeaders(): HttpHeaders {
     const token = this.token();
     return new HttpHeaders({ 'Authorization': `Bearer ${token}`, });
+  }
+
+  public isAuthenticated(): boolean {
+    const userCookie = this.cookieService.get('user');
+    if (userCookie) {
+      const decoded: JwtPayload = JSON.parse(userCookie);
+      const currentTime = Math.floor(Date.now() / 1000);
+      return decoded.exp > currentTime;
+    }
+    return false;
+  }
+
+  public startAuthWatcher(intervalMs: number = 30000): void {
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval);
+    }
+
+    this.checkInterval = setInterval(() => {
+      console.log('Checking authentication status...');
+      if (!this.isAuthenticated()) {
+        clearInterval(this.checkInterval);
+        this.router.navigate(['/login']);
+      }
+    }, intervalMs);
   }
 
   //public logout(): Promise<void> {
