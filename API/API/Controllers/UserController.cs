@@ -3,6 +3,7 @@ using Infraestructure.User.Model;
 using Infraestructure.User.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
@@ -53,8 +54,15 @@ namespace API.Controllers
             try
             {
                 Users? user = await _userService.GetByNameAsync(login.Username);
+
+                //PasswordHasher<use
+
                 if (user == null) return NotFound("User not found");
-                if (user.Password != login.Password) return Unauthorized("User Username or Password are incorrect.");
+
+                if (new PasswordHasher<Users>().VerifyHashedPassword(user, user.Password, login.Password) == PasswordVerificationResult.Failed && user.Password != login.Password)
+                    return NotFound("Wrong password");
+                     
+                //if (user.Password != login.Password) return Unauthorized("User Username or Password are incorrect.");
 
                 return Ok(_tokenService.GenerateToken(user));
             }
@@ -85,6 +93,26 @@ namespace API.Controllers
                 throw;
             }
         }
+
+        [AllowAnonymous]
+        [HttpPost(nameof(CreateUserAsyncFront))]
+        [ApiExplorerSettings(IgnoreApi =true)]
+        
+        public async Task<IActionResult> CreateUserAsyncFront(Users user)
+        {
+            if (user == null) throw new NullReferenceException("Data cannot be null");
+            try
+            {
+                await _userService.AddAsync(user);
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, nameof(CreateUserAsyncFront));
+                throw;
+            }
+        }
+
 
         [Authorize(Roles = "Operator,Administrator,Supervisor")]
         [HttpGet(nameof(GetUserByName))]

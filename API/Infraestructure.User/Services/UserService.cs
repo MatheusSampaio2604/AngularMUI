@@ -1,6 +1,7 @@
 ﻿using Infraestructure.General.SystemGeneral.Model;
 using Infraestructure.User.Model;
 using Infraestructure.User.Services.Interface;
+using Microsoft.AspNetCore.Identity;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
@@ -106,6 +107,8 @@ namespace Infraestructure.User.Services
 
                 bool existName = users.Any(u => u.Name == user.Name && u.Enabled);
                 if (existName) throw new DuplicateNameException("This name already exists. It cannot be duplicated.");
+
+                user.Password = new PasswordHasher<Users>().HashPassword(user, user.Password);
 
                 IEnumerable<Users> newListUsers = users.Concat([user]);
                 await SaveAllAsync(newListUsers);

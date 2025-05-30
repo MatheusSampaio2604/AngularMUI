@@ -18,7 +18,6 @@ export class AuthGuard implements CanActivate {
     const dataCookie: string | null = this.cookieService.get('user');
     const user: JwtPayload = dataCookie ? JSON.parse(dataCookie) : null;
     const requiredRole: string[] = route.data['roles'] || [];
-
     if (user) {
       const isExpired: Boolean = new Date().getTime() > user.exp * 1000;
 
@@ -26,10 +25,13 @@ export class AuthGuard implements CanActivate {
         this.authService.logout();
         return false;
       }
+      
 
-      const hasRequiredRole = user.roles?.some((role: string) =>
-        requiredRole.includes(role)
-      );
+      const roles = Array.isArray(user.roles) ? user.roles : [user.roles].filter(Boolean);
+
+      const hasRequiredRole = roles
+      .filter((role): role is string => typeof role === "string")
+      .some((role) => requiredRole.includes(role));
 
       if (!hasRequiredRole) {
         this.router.navigate(['/unauthorized']);
