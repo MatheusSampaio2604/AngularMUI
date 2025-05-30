@@ -1,8 +1,8 @@
 import { Router } from "@angular/router";
 import { Roles } from "../enum/roles.enum";
-import { LoginUser } from "./login-user.model";
+import { LoginUser, RegisterUser } from "./login-user.model";
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders} from "@angular/common/http";
 import { environment } from "../../../environments/environment.prod";
 import { firstValueFrom } from "rxjs";
 import { CookieService } from 'ngx-cookie-service';
@@ -23,6 +23,23 @@ export class AuthService {
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     //console.warn(hashHex)
     return hashHex;
+  }
+  
+  public async registerAsync(userRegister: LoginUser): Promise<boolean> {
+    try {
+      const userToRegister = new RegisterUser(userRegister.username!,userRegister.password!);
+      
+      const data = await firstValueFrom( this.http.post<any>('https://localhost:7283/api/User/CreateUserAsyncFront',userToRegister));
+      if(data.message === "Success")
+        return true;
+      
+      return false;    
+    }
+    catch (e) {
+      console.error(e)
+      return false      
+  }
+
   }
 
   private async decodeToken(token: string): Promise<JwtPayload | null> {
@@ -71,7 +88,7 @@ export class AuthService {
   }
 
   public async loginAsync(userLogin: LoginUser): Promise<boolean> {
-    userLogin.password = await this.encryptPassword(userLogin.password!);
+    // userLogin.password = await this.encryptPassword(userLogin.password!);
     try {
 
       const data = await firstValueFrom(this.http.post<any>(`${environment.ApiUrl}/User/LoginRequest`, userLogin));
@@ -92,11 +109,6 @@ export class AuthService {
     }
   }
 
-  public async registerAsync(userRegister: LoginUser): Promise<boolean> {
-    //const data = await this.http.post<any>('', userLogin);
-    return false;
-
-  }
 
   public userName(): string | null {
     const userCookie = this.cookieService.get('user');
@@ -198,9 +210,7 @@ export class AuthService {
   //      return true;
   //  }
   //  return false;
-
-
-
+   
   //}
 
 

@@ -14,3 +14,16 @@ export class LoginUser {
 //  token?: string;
 //  expiration?: number;
 //}
+
+export class RegisterUser {
+    Name: string;
+    Password: string;
+    UserGroups: string[] = ["Operator"];
+    Enabled: boolean = true;
+
+  constructor (name:string, password:string){
+    this.Name = name;
+    this.Password = password;
+  }
+
+}

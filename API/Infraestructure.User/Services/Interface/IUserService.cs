@@ -15,5 +15,7 @@ namespace Infraestructure.User.Services.Interface
         Task UpdateAsync(Users user);
         Task DeleteAsync(string name);
         Task ChangePasswordAsync(ChangePassword changePassword);
+
+
     }
 }

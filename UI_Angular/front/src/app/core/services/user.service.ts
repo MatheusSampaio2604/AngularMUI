@@ -52,7 +52,7 @@ export class UserService {
   public async createUser(data: User): Promise<boolean> {
     try {
       const headers = this._auth.getHeaders();
-      data.password = await this._auth.encryptPassword(data.password!);
+      // data.password = await this._auth.encryptPassword(data.password!);
 
       const response = await firstValueFrom(this._http.post<any>(`${environment.ApiUrl}/User/CreateUserAsync`, data, { headers }));
 
